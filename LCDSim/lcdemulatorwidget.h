@@ -6,6 +6,9 @@
 #include <QTimer>
 #include <QMouseEvent>
 
+/* 类私有宏（只影响这个类） */
+#define LCD_EMU_OFS_PIX 10
+
 class LcdEmulatorWidget : public QWidget
 {
     Q_OBJECT

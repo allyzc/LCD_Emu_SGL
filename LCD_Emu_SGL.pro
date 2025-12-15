@@ -12,6 +12,7 @@ SOURCES += \
     bg.c \
     test.c \
     LCDSim/lcdemulatorwidget.cpp \
+    LCDSim/touch_port.c \
     sgl-main/source/core/sgl_anim.c \
     sgl-main/source/core/sgl_core.c \
     sgl-main/source/core/sgl_event.c \
@@ -58,6 +59,7 @@ SOURCES += \
 
 HEADERS += \
     LCDSim/lcdemulatorwidget.h \
+    LCDSim/touch_port.h \
     sgl-main/source/include/sgl_anim.h \
     sgl-main/source/include/sgl_cfgfix.h \
     sgl-main/source/include/sgl_core.h \

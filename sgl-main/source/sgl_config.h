@@ -7,7 +7,7 @@
 #define  __CONFIG_H__
 
 
-#define  CONFIG_SGL_PANEL_PIXEL_DEPTH                      32
+#define  CONFIG_SGL_PANEL_PIXEL_DEPTH                      24
 #define  CONFIG_SGL_EVENT_QUEUE_SIZE                       16
 #define  CONFIG_SGL_SYSTICK_MS                             10
 #define  CONFIG_SGL_DIRTY_AREA_THRESHOLD                   64

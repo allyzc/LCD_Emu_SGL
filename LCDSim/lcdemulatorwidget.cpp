@@ -1,4 +1,5 @@
 #include "lcdemulatorwidget.h"
+#include "touch_port.h"
 #include <QPainter>
 #include <cstring>
 #include <QDebug.h>
@@ -13,7 +14,7 @@ LcdEmulatorWidget::LcdEmulatorWidget(int w, int h, uint8_t *fbuffer, int format,
     imgFormat = format;
     //std::memset(fb, 0, w*h*3);
 
-    setFixedSize(w+20, h+20);
+    setFixedSize(w+LCD_EMU_OFS_PIX*2, h+LCD_EMU_OFS_PIX*2);
 
     // 60Hz 刷新
     connect(&timer, &QTimer::timeout, this, &LcdEmulatorWidget::updateLcd);
@@ -51,21 +52,22 @@ void LcdEmulatorWidget::paintEvent(QPaintEvent *)
     QImage img(fb, lcdWidth, lcdHeight, (QImage::Format)imgFormat);
 
     QPainter p(this);
-    p.drawImage(10, 10, img);
+    p.drawImage(LCD_EMU_OFS_PIX, LCD_EMU_OFS_PIX, img);
 }
 
 void LcdEmulatorWidget::mousePressEvent(QMouseEvent *e)
 {
-
+    //qDebug()<<"TOUCH_EVENT_DOWN:"<<e->x()-LCD_EMU_OFS_PIX<<","<<e->y()-LCD_EMU_OFS_PIX;
+    touch_port_input(TOUCH_EVENT_DOWN, e->x()-LCD_EMU_OFS_PIX, e->y()-LCD_EMU_OFS_PIX);
 }
 
 void LcdEmulatorWidget::mouseReleaseEvent(QMouseEvent *e)
 {
-
+    touch_port_input(TOUCH_EVENT_UP, e->x()-LCD_EMU_OFS_PIX, e->y()-LCD_EMU_OFS_PIX);
 }
 
 void LcdEmulatorWidget::mouseMoveEvent(QMouseEvent *e)
 {
-    qDebug() << "Mouse move:"<<e->pos();
+    touch_port_input(TOUCH_EVENT_MOVE, e->x()-LCD_EMU_OFS_PIX, e->y()-LCD_EMU_OFS_PIX);
 }
 
