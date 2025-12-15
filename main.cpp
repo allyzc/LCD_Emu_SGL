@@ -51,7 +51,33 @@ int main(int argc,char**argv){
 
     sgl_init();
 
-    sgl_demo();
+    //sgl_demo();
+    sgl_obj_t *rect = sgl_rect_create(NULL);
+    sgl_obj_set_pos(rect, 20, 20);
+    sgl_obj_set_size(rect, 200, 100);
+    sgl_color_t color1;
+    color1.full = 0xff0000;
+    sgl_rect_set_color(rect, color1);
+
+
+    sgl_obj_t *circle = sgl_circle_create(NULL);
+    sgl_obj_set_pos(circle, 300, 20);
+    sgl_obj_set_size(circle, 100, 100);
+    color1.full = 0x0000ff;
+    sgl_circle_set_color(circle, color1);
+
+    sgl_obj_t *button = sgl_button_create(NULL);
+    sgl_obj_set_pos(button, 20, 200);
+    sgl_obj_set_size(button, 200, 70);
+    color1.full = 0x00ff00;
+    sgl_button_set_color(button, color1);
+    sgl_button_set_radius(button, 50);
+    sgl_button_set_border_width(button, 2);
+    color1.full = 0xff0000;
+    sgl_button_set_border_color(button, color1);
+    sgl_button_set_alpha(button, 128);
+    sgl_button_set_font(button, &consolas23);
+    sgl_button_set_text(button, "Button: 1");
 
     QObject::connect(&timer_systick, &QTimer::timeout, [](){
         systick_handler();
