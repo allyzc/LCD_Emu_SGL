@@ -36,7 +36,7 @@ extern int sgl_demo(void);
 int main(int argc,char**argv){
     QApplication a(argc,argv);
 
-    LcdEmulatorWidget lcd(CONFIG_SGL_PANEL_WIDTH, CONFIG_SGL_PANEL_HEIGHT, (uint8_t*)panel_buffer, QImage::Format_BGR888);
+    LcdEmulatorWidget lcd(CONFIG_SGL_PANEL_WIDTH, CONFIG_SGL_PANEL_HEIGHT, (uint8_t*)panel_buffer, QImage::Format_RGB32);
     lcd.show();
 
     fb_dev.buffer[0]     = (void*)panel_buffer;
