@@ -1,23 +1,25 @@
 #include <QApplication>
 #include "LCDSim/lcdemulatorwidget.h"
+#include "LCDSim/touch_port.h"
 #include <QDebug>
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
-#include <sgl.h>
+
+#include "sgl.h"
 
 #define  CONFIG_SGL_PANEL_WIDTH         320
 #define  CONFIG_SGL_PANEL_HEIGHT        240
-#define  CONFIG_SGL_PANEL_BUFFER_LINE   40
+#define  CONFIG_SGL_fb_buffer_LINE   40
 
 QTimer timer_systick;             // systick_handler定时器
 
 sgl_device_fb_t fb_dev;
-sgl_color_t panel_buffer[CONFIG_SGL_PANEL_WIDTH * CONFIG_SGL_PANEL_HEIGHT];
+sgl_color_t fb_buffer[CONFIG_SGL_PANEL_WIDTH * CONFIG_SGL_PANEL_HEIGHT];
 
 void panel_flush_area(int16_t x, int16_t y, int16_t w, int16_t h, sgl_color_t *src)
 {
-//    sgl_color_t *dest = panel_buffer;
+//    sgl_color_t *dest = fb_buffer;
 //    dest += (x + y * CONFIG_SGL_PANEL_WIDTH);
 
 //    for(int i = 0; i < h; i ++) {
@@ -29,10 +31,32 @@ void panel_flush_area(int16_t x, int16_t y, int16_t w, int16_t h, sgl_color_t *s
     //并且flush里面不用写像素了，因为如果指定的是fb的VRAM，那么所有的图像数据会直接往VRAM写
 }
 
+static void mouse_event_interrupt(void)
+{
+    sgl_event_pos_t pos;
+
+    if( tp_get_event()==TOUCH_EVENT_DOWN ) {
+        pos.x = tp_get_x();
+        pos.y = tp_get_y();
+        sgl_event_send_pos(pos, SGL_EVENT_PRESSED);
+    }
+    else if( tp_get_event()==TOUCH_EVENT_UP ) {
+        pos.x = tp_get_x();
+        pos.y = tp_get_y();
+        sgl_event_send_pos(pos, SGL_EVENT_RELEASED);
+    }
+    else if( tp_get_event()==TOUCH_EVENT_MOVE ) {
+        pos.x = tp_get_x();
+        pos.y = tp_get_y();
+        sgl_event_send_pos(pos, SGL_EVENT_MOTION);
+    }
+}
+
 /* 系统时钟中断服务函数，设置为1ms中断一次 */
 void systick_handler(void)
 {
     sgl_tick_inc(10);
+    mouse_event_interrupt();
     sgl_task_handle();
 }
 
@@ -40,52 +64,15 @@ extern "C" {
 extern int sgl_demo(void);
 }
 
-void printf_fb(int x, int y, int w, int h)
-{
-    qDebug() << "printf_fb:"
-             << "x=" << x
-             << "y=" << y
-             << "w=" << w
-             << "h=" << h;
-
-    for (int row = 0; row < h; ++row)
-    {
-        int py = y + row;
-        if (py < 0 || py >= CONFIG_SGL_PANEL_HEIGHT)
-            continue;
-
-        QString lineStr;
-
-        for (int col = 0; col < w; ++col)
-        {
-            int px = x + col;
-            if (px < 0 || px >= CONFIG_SGL_PANEL_WIDTH)
-                continue;
-
-            // ⭐ 核心：按“像素索引”访问
-            sgl_color_t pixel =
-                panel_buffer[py * CONFIG_SGL_PANEL_WIDTH + px];
-
-            lineStr += QString("%1 ")
-                           .arg(pixel.full, 8, 16, QLatin1Char('0'));
-        }
-
-        qDebug().noquote()
-            << QString("y=%1: ").arg(py, 4) + lineStr;
-    }
-}
-
 void button_event_cb(sgl_event_t *evt)
 {
     size_t para = evt->param;
     switch (evt->type) {
     case SGL_EVENT_PRESSED:
-        //qDebug("Button %d pressed\n", para);
-        printf_fb(0,0,10,10);
+        qDebug("Button %d pressed\n", para);
         break;
     case SGL_EVENT_RELEASED:
-        //qDebug("Button %d released\n", para);
-        printf_fb(0,0,10,10);
+        qDebug("Button %d released\n", para);
         break;
     }
 }
@@ -93,11 +80,11 @@ void button_event_cb(sgl_event_t *evt)
 int main(int argc,char**argv){
     QApplication a(argc,argv);
 
-    LcdEmulatorWidget lcd(CONFIG_SGL_PANEL_WIDTH, CONFIG_SGL_PANEL_HEIGHT, (uint8_t*)panel_buffer, QImage::Format_RGB32);
+    LcdEmulatorWidget lcd(CONFIG_SGL_PANEL_WIDTH, CONFIG_SGL_PANEL_HEIGHT, (uint8_t*)fb_buffer, QImage::Format_BGR888);
     lcd.show();
 
-    fb_dev.buffer[0]     = (void*)panel_buffer;
-    fb_dev.buffer_size   = SGL_ARRAY_SIZE(panel_buffer);
+    fb_dev.buffer[0]     = (void*)fb_buffer;
+    fb_dev.buffer_size   = SGL_ARRAY_SIZE(fb_buffer);
     fb_dev.xres          = CONFIG_SGL_PANEL_WIDTH;
     fb_dev.yres          = CONFIG_SGL_PANEL_HEIGHT;
     fb_dev.xres_virtual  = CONFIG_SGL_PANEL_WIDTH;

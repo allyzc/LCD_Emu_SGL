@@ -1,23 +1,37 @@
 #include "touch_port.h"
-#include "sgl.h"   // 或 emWin / lvgl
+
+int16_t g_tp_x;
+int16_t g_tp_y;
+touch_event_t g_tp_event;
 
 void touch_port_input(touch_event_t event, int16_t x, int16_t y)
 {
-  sgl_event_pos_t pos;
+    g_tp_event = event;
+    if( event==TOUCH_EVENT_UP ) {
+        g_tp_x = x;
+        g_tp_y = y;
+    }
+    else if( event==TOUCH_EVENT_DOWN ) {
+        g_tp_x = x;
+        g_tp_y = y;
+    }
+    else if( event==TOUCH_EVENT_MOVE ) {
+        g_tp_x = x;
+        g_tp_y = y;
+    }
+}
 
-  if( event==TOUCH_EVENT_UP ) {
-      pos.x = x;
-      pos.y = y;
-      sgl_event_send_pos(pos, SGL_EVENT_RELEASED);
-  }
-  else if( event==TOUCH_EVENT_DOWN ) {
-      pos.x = x;
-      pos.y = y;
-      sgl_event_send_pos(pos, SGL_EVENT_PRESSED);
-  }
-  else if( event==TOUCH_EVENT_MOVE ) {
-      pos.x = x;
-      pos.y = y;
-      sgl_event_send_pos(pos, SGL_EVENT_MOTION);
-  }
+uint8_t tp_get_event(void)
+{
+    return g_tp_event;
+}
+
+int16_t tp_get_x(void)
+{
+    return g_tp_x;
+}
+
+int16_t tp_get_y(void)
+{
+    return g_tp_y;
 }

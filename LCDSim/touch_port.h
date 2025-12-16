@@ -12,6 +12,9 @@ typedef enum {
 } touch_event_t;
 
 void touch_port_input(touch_event_t event, int16_t x, int16_t y);
+uint8_t tp_get_event(void);
+int16_t tp_get_x(void);
+int16_t tp_get_y(void);
 
 #ifdef __cplusplus
 }
