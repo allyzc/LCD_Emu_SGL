@@ -27,6 +27,7 @@
 #define  CONFIG_SGL_FONT_CONSOLAS23                        1
 #define  CONFIG_SGL_FONT_CONSOLAS24                        1
 #define  CONFIG_SGL_FONT_CONSOLAS32                        1
+#define  CONFIG_SGL_USE_FULL_FB                        1
 
 
 #endif  //!__CONFIG_H__
