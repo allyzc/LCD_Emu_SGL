@@ -1,7 +1,7 @@
 QT       += core gui widgets
 CONFIG   += c++11 console
 TEMPLATE = app
-TARGET = LCD_Emu_Project
+TARGET = LCD_Emu_SGL
 
 INCLUDEPATH += $$PWD/sgl-main/source
 INCLUDEPATH += $$PWD/sgl-main/source/include

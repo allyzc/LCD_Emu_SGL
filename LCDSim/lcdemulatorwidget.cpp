@@ -16,7 +16,7 @@ LcdEmulatorWidget::LcdEmulatorWidget(int w, int h, uint8_t *fbuffer, int format,
 
     setFixedSize(w+LCD_EMU_OFS_PIX*2, h+LCD_EMU_OFS_PIX*2);
 
-    // 60Hz 刷新
+    // 30Hz 刷新
     connect(&timer, &QTimer::timeout, this, &LcdEmulatorWidget::updateLcd);
     timer.start(33);
 }
