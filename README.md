@@ -55,29 +55,11 @@
 
 ---
 
-## 📦 目录结构（Directory Layout）
-
-```
-.
-├─ app/                    # 应用层（你的 UI / 业务代码）
-├─ sgl/                    # SGL 源码
-│  └─ LICENSE.txt          # SGL 原始许可证
-├─ port/                   # 平台适配层（PC / Qt）
-├─ qt/                     # Qt 相关代码
-├─ main.cpp
-├─ *.pro
-└─ README.md
-```
-
-> 💡 `port/` 目录的职责与嵌入式中的 `bsp / drv` 层一致，用于隔离平台差异。
-
----
-
 ## 🛠 构建环境（Build Environment）
 
 - 操作系统：Windows 10 / 11
-- Qt：5.15.x
-- 编译器：MinGW 64-bit
+- Qt：5.XX
+- 编译器：MinGW
 - SGL：请参考官方仓库 [SGL](https://github.com/sgl-org/sgl)
 
 ---
@@ -94,15 +76,6 @@
 3. 编译并运行
 
 4. 启动后即可在 PC 窗口中看到 SGL UI
-
----
-
-## 🖱 输入说明（Input）
-
-- 鼠标左键：模拟触摸按下 / 释放
-- 鼠标移动：模拟触摸滑动
-
-> 输入事件通过 `port/` 转换为 SGL 的输入接口。
 
 ---
 
